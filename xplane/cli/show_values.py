@@ -7,6 +7,8 @@ import xplane.io
 
 class MyProtocol(xplane.io.Protocol):
     def __init__(self, window):
+        super().__init__()
+
         self.window = window
 
         curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)

@@ -8,6 +8,9 @@ from . import packets
 class Protocol:
     """The X-Plane UDP protocol."""
 
+    def __init__(self, send_address=None):
+        self.send_address = send_address
+
     def connection_made(self, transport):
         self.transport = transport
 
@@ -34,3 +37,6 @@ class Protocol:
         """
 
         pass
+
+    def send_packet(self, packet):
+        self.transport.sendto(packet.write(), self.send_address)
