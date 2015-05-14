@@ -18,6 +18,7 @@ setup(
     url='https://github.com/tomleese/pyxplane',
     packages=['xplane'],
     install_requires=['Pint'],
+    setup_requires=['Sphinx >=1.3'],
     entry_points={
         'console_scripts': [
             'xplane-show-values = xplane.cli.show_values:main'
