@@ -1,14 +1,20 @@
-def parse_packet(data):
-    """
-    Parse a packet from X-Plane.
+from . import packets
 
-    Parameters
-    ----------
-    data : bytes
-        The raw data in the packet.
-    """
 
-    message_type = data[:4]
-    index_byte = data[4]
-    message = data[5:]
-    return message_type, index_byte, message
+class Protocol:
+    def connection_made(self, transport):
+        self.transport = transport
+
+    def datagram_received(self, data, address):
+        message_type = data[:4]
+        if message_type == b'DATA':
+            self.got_data_packet(packets.DataPacket(data))
+        else:
+            print("Got unknown message type '{}'.".format(message_type))
+
+    def got_data_packet(self, packet, address):
+        """
+        You should override this.
+        """
+
+        pass
