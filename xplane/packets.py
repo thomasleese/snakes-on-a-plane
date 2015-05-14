@@ -172,6 +172,42 @@ class DataPacket:
 
         return L, M, N
 
+    def read_gear_break(self):
+        """
+        Read the gear and breaks (index 16).
+
+        Returns
+        -------
+        Gear : float
+        W-break : float
+        L-break : float
+        R-break : float
+        """
+
+        values = self[16]
+
+        gear = values[0]
+        wbrak = values[1]
+        lbrak = values[2]
+        rbrak = values[3]
+
+        return gear, wbrak, lbrak, rbrak
+
+    def write_gear_break(self, gear=LEAVE_ALONE, wbrak=LEAVE_ALONE,
+                         lbrak=LEAVE_ALONE, rbrak=LEAVE_ALONE):
+        """
+        Write the gear and breaks (index 16).
+
+        Parameters
+        -------
+        gear : float
+        wbrak : float
+        lbrak : float
+        rbrak : float
+        """
+
+        self[16] = (gear, wbrak, lbrak, rbrak) + (0,) * 4
+
     def read_angular_velocities(self):
         """
         Read the angular velocities (index 16).
@@ -193,24 +229,26 @@ class DataPacket:
 
         return P, Q, R
 
-    def read_pitch_roll_yaw(self):
+    def read_pitch_roll_headings(self):
         """
-        Read the pitch, roll and yaw (index 17).
+        Read the pitch, roll and headings (index 17).
 
         Returns
         -------
         Pitch : rad
         Roll : rad
-        Yaw : rad
+        True Heading : rad
+        Magnetic Heading : rad
         """
 
         values = self[17]
 
         pitch = (values[0] * units.degree).to(units.radian)
         roll = (values[1] * units.degree).to(units.radian)
-        yaw = (values[2] * units.degree).to(units.radian)
+        true_heading = (values[2] * units.degree).to(units.radian)
+        magnetic_heading = (values[2] * units.degree).to(units.radian)
 
-        return pitch, roll, yaw
+        return pitch, roll, true_heading, magnetic_heading
 
     def read_angle_of_attack_side_slip_paths(self):
         """

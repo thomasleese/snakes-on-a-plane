@@ -17,8 +17,6 @@ class MyProtocol(xplane.io.Protocol):
         self.window.addstr(y, x + len(name) + 1, str(round(value, d)), curses.color_pair(1))
 
     def got_data_packet(self, packet, address):
-        # Parse all the values.
-
         self.window.clear()
 
         try:
@@ -44,10 +42,11 @@ class MyProtocol(xplane.io.Protocol):
             pass
 
         try:
-            pitch, roll, yaw = packet.read_pitch_roll_yaw()
+            pitch, roll, true_heading, magnetic_heading \
+                = packet.read_pitch_roll_headings()
             self.show_value(7, 1, 'Pitch', pitch)
             self.show_value(7, 31, 'Roll', roll)
-            self.show_value(7, 61, 'Yaw', yaw)
+            self.show_value(7, 61, 'Yaw', true_heading)
         except IndexError:
             pass
 
