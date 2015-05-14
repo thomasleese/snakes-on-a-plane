@@ -96,8 +96,8 @@ class DataPacket:
 
         try:
             return self.data[index]
-        except IndexError:
-            raise IndexError('Packet does not contain index {}.'.format(key))
+        except KeyError:
+            raise IndexError('Packet does not contain index {}.'.format(index))
 
     def __setitem__(self, index, values):
         """

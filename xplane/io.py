@@ -14,7 +14,7 @@ class Protocol:
     def datagram_received(self, data, address):
         message_type = data[:4]
         if message_type == b'DATA':
-            self.got_data_packet(packets.DataPacket(data))
+            self.got_data_packet(packets.DataPacket(data), address)
         else:
             print("Got unknown message type '{}'.".format(message_type))
 
