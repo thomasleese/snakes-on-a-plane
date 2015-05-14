@@ -21,7 +21,8 @@ setup(
     setup_requires=['Sphinx >=1.3', 'wheel'],
     entry_points={
         'console_scripts': [
-            'xplane-show-values = xplane.cli.show_values:main'
+            'xplane-show-values = xplane.cli.show_values:main',
+            'xplane-autopilot = xplane.cli.autopilot:main',
         ]
     },
     classifiers=[
