@@ -71,7 +71,7 @@ def got_packet(window, packet):
     window.refresh()
 
 
-def main(window, address):
+def mainloop(window, address):
     curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
 
@@ -85,7 +85,7 @@ def main(window, address):
         got_packet(window, data)
 
 
-if __name__ == '__main__':
+def main():
     from argparse import ArgumentParser
 
     parser = ArgumentParser()
@@ -93,4 +93,8 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--port', type=int, default=49000)
     args = parser.parse_args()
 
-    curses.wrapper(main, (args.bind, args.port))
+    curses.wrapper(mainloop, (args.bind, args.port))
+
+
+if __name__ == '__main__':
+    main()
