@@ -10,7 +10,7 @@ def show_value(window, y, x, name, value, d=2):
 
 
 def got_packet(window, packet):
-    message_type, index_byte, message = xplane.socket.parse_packet(packet)
+    message_type, index_byte, message = xplane.io.parse_packet(packet)
     if message_type != b'DATA':
         return  # We don't care what it is.
 
