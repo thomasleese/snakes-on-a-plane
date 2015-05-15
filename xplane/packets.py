@@ -387,3 +387,22 @@ class DataPacket:
         rudd2_2 = (values[3] * units.degree).to(units.radian)
 
         return (rudd1_1, rudd1_2), (rudd2_1, rudd2_2)
+
+
+class CommandPacket:
+    def __init__(self, command=None, data=None):
+        self.command = command
+
+        if data is not None:
+            self.read(data)
+
+    def read(self, data):
+        if not data.startswith(b'CMND'):
+            raise ValueError("Not a 'DATA' packet.")
+
+        data = data[5:]
+
+        self.command = data.decode()
+
+    def write(self):
+        return b'CMND0' + self.command.encode()
