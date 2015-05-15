@@ -145,6 +145,11 @@ class DataPacket:
         return indicated_airspeed, equivalent_airspeed, true_airspeed, \
             groundspeed
 
+    def write_joystick_elevator_aileron_rudder(self, elevator=LEAVE_ALONE,
+                                               aileron=LEAVE_ALONE,
+                                               rudder=LEAVE_ALONE):
+        self[8] = (elevator, aileron, rudder) + (0,) * 5
+
     def read_angular_moments(self):
         """
         Read the angular moments (index 15).
