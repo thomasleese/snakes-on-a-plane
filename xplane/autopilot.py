@@ -59,6 +59,8 @@ class TakeoffMixin:
         packet.write_throttle_command(1)
         self.send_packet(packet)
 
+        print('Throttle increased to 100%.')
+
     def takeoff_started(self):
         self._takeoff_state = 'started'
 
