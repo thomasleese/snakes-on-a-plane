@@ -11,8 +11,10 @@ from .packets import units
 class TakeoffMixin:
     _takeoff_state = None
     _takeoff_heading = None
+    _takeoff_altitude_target = None
 
-    def takeoff(self):
+    def takeoff(self, altitude_target=300):
+        self._takeoff_altitude_target = altitude_target * units.meter
         self.takeoff_started()
 
     def takeoff_got_data_packet(self, packet, address):
@@ -39,8 +41,7 @@ class TakeoffMixin:
                 elevator = 0.3
                 aileron = -roll.to(units.radians).magnitude
 
-            # TODO get this as an argument
-            if altitude >= 300 * units.meter:
+            if altitude >= self._takeoff_altitude_target:
                 elevator = -0.5
                 self.takeoff_finished()
 
