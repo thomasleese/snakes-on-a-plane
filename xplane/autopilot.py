@@ -28,6 +28,7 @@ class TakeOffMixin:
         elif self._take_off_state == 'throttle':
             _, roll, true_heading, _ = packet.read_pitch_roll_headings()
             lift, _, _ = packet.read_aero_forces()
+            _,_, altitude, _ = packet.read_latitude_longitude_altitude()
 
             rudder = (self._take_off_heading - true_heading) * 5
             elevator = 0
@@ -35,8 +36,13 @@ class TakeOffMixin:
 
             # TODO calculate this based on weight of craft
             if lift >= 5000 * units.newton:
-                elevator = 0.25
+                elevator = 0.3
                 aileron = -roll.to(units.radians).magnitude
+
+            # TODO get this as an argument
+            if altitude >= 300 * units.meter:
+                elevator = -0.5
+                self._take_off_state = None
 
             p = packets.DataPacket()
             p.write_joystick_elevator_aileron_rudder(rudder=rudder,
