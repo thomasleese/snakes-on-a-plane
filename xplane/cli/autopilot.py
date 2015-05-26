@@ -4,7 +4,7 @@ import xplane.autopilot
 import xplane.io
 
 
-class MyProtocol(xplane.io.Protocol, xplane.autopilot.TakeOffMixin):
+class MyProtocol(xplane.io.Protocol, xplane.autopilot.TakeoffMixin):
     def __init__(self, remote_addr):
         super().__init__(remote_addr)
 
@@ -33,7 +33,7 @@ def main():
     parser.add_argument('--send-port', '-p', type=int, default=49000)
     parser.add_argument('--listen-host', '-b', type=str, default='0.0.0.0')
     parser.add_argument('--listen-port', '-P', type=int, default=49000)
-    parser.add_argument('action', type=str, choices=['take_off'])
+    parser.add_argument('action', type=str, choices=['takeoff'])
     args = parser.parse_args()
 
     local_addr = (args.listen_host, args.listen_port)

@@ -8,29 +8,29 @@ from .io import Protocol
 from .packets import units
 
 
-class TakeOffMixin:
-    _take_off_state = None
-    _take_off_heading = None
+class TakeoffMixin:
+    _takeoff_state = None
+    _takeoff_heading = None
 
-    def take_off(self):
-        self.take_off_started()
+    def takeoff(self):
+        self.takeoff_started()
 
-    def take_off_got_data_packet(self, packet, address):
-        if self._take_off_state is None:
+    def takeoff_got_data_packet(self, packet, address):
+        if self._takeoff_state is None:
             return False
 
-        if self._take_off_state == 'started':
+        if self._takeoff_state == 'started':
             _, _, true_heading, _ = packet.read_pitch_roll_headings()
-            self._take_off_heading = true_heading
+            self._takeoff_heading = true_heading
             print('Landing strip heading is:', true_heading)
-            self._take_off_throttle()
-            self._take_off_state = 'throttle'
-        elif self._take_off_state == 'throttle':
+            self._takeoff_throttle()
+            self._takeoff_state = 'throttle'
+        elif self._takeoff_state == 'throttle':
             _, roll, true_heading, _ = packet.read_pitch_roll_headings()
             lift, _, _ = packet.read_aero_forces()
             _,_, altitude, _ = packet.read_latitude_longitude_altitude()
 
-            rudder = (self._take_off_heading - true_heading) * 5
+            rudder = (self._takeoff_heading - true_heading) * 5
             elevator = 0
             aileron = 0
 
@@ -42,7 +42,7 @@ class TakeOffMixin:
             # TODO get this as an argument
             if altitude >= 300 * units.meter:
                 elevator = -0.5
-                self._take_off_state = None
+                self.takeoff_finished()
 
             p = packets.DataPacket()
             p.write_joystick_elevator_aileron_rudder(rudder=rudder,
@@ -52,15 +52,15 @@ class TakeOffMixin:
 
         return True
 
-    def _take_off_throttle(self):
+    def _takeoff_throttle(self):
         self.send_packet(packets.CommandPacket('sim/flight_controls/brakes_toggle_regular'))
 
         packet = packets.DataPacket()
         packet.write_throttle_command(1)
         self.send_packet(packet)
 
-    def take_off_started(self):
-        self._take_off_state = 'started'
+    def takeoff_started(self):
+        self._takeoff_state = 'started'
 
-    def take_off_finished(self):
-        self._take_off_state = None
+    def takeoff_finished(self):
+        self._takeoff_state = None
