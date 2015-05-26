@@ -1,5 +1,5 @@
 """
-A very simply autopilot designed to simplify testing of planes by providing an
+A very simple autopilot designed to simplify testing of planes by providing an
 existing framework for getting a plane in the air.
 """
 
