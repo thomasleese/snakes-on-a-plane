@@ -3,8 +3,9 @@ A very simply autopilot designed to simplify testing of planes by providing an
 existing framework for getting a plane in the air.
 """
 
-from .io import Protocol
 from . import packets
+from .io import Protocol
+from .packets import units
 
 
 class TakeOffMixin:
@@ -25,13 +26,24 @@ class TakeOffMixin:
             self._take_off_throttle()
             self._take_off_state = 'throttle'
         elif self._take_off_state == 'throttle':
-            _, _, true_heading, _ = packet.read_pitch_roll_headings()
+            _, roll, true_heading, _ = packet.read_pitch_roll_headings()
             diff = self._take_off_heading - true_heading
 
-            print(diff)
+            rudder = diff * 5
+            elevator = 0
+            aileron = 0
+
+            lift, _, _ = packet.read_aero_forces()
+
+            # TODO calculate this based on weight of craft
+            if lift >= 5000 * units.newton:
+                elevator = 0.25
+                aileron = -roll.to(units.radians).magnitude
 
             p = packets.DataPacket()
-            p.write_joystick_elevator_aileron_rudder(rudder=diff * 3, elevator=0.1)
+            p.write_joystick_elevator_aileron_rudder(rudder=rudder,
+                                                     aileron=aileron,
+                                                     elevator=elevator)
             self.send_packet(p)
 
         return True
