@@ -255,28 +255,50 @@ class DataPacket:
 
         return pitch, roll, true_heading, magnetic_heading
 
-    def read_angle_of_attack_side_slip_paths(self):
+    def read_latitude_longitude_altitude(self):
         """
-        Read the angle of attack, side slip and paths (index 18).
+        Read the latitude, longitude and altitude (index 20).
 
         Returns
         -------
-        Alpha : rad
-        Beta : rad
-        H-path : rad
-        V-path : rad
-        Slip : rad
+        Latitde : rad
+        Longitude : rad
+        Mean Sea Level Altitude : m
+        Above Ground Level Altitude : m
         """
 
-        values = self[18]
+        values = self[20]
 
-        alpha = (values[0] * units.degree).to(units.radian)
-        beta = (values[1] * units.degree).to(units.radian)
-        hpath = (values[2] * units.degree).to(units.radian)
-        vpath = (values[3] * units.degree).to(units.radian)
-        slip = (values[4] * units.degree).to(units.radian)
+        latitude = (values[0] * units.degree).to(units.radian)
+        longitude = (values[1] * units.degree).to(units.radian)
+        mean_sea_level_altitude = (values[2] * units.feet).to(units.meter)
+        above_ground_level_altitude = (values[4] * units.feet).to(units.meter)
 
-        return alpha, beta, hpath, vpath, slip
+        return latitude, longitude, mean_sea_level_altitude, \
+            above_ground_level_altitude
+
+        def read_angle_of_attack_side_slip_paths(self):
+            """
+            Read the angle of attack, side slip and paths (index 18).
+
+            Returns
+            -------
+            Alpha : rad
+            Beta : rad
+            H-path : rad
+            V-path : rad
+            Slip : rad
+            """
+
+            values = self[18]
+
+            alpha = (values[0] * units.degree).to(units.radian)
+            beta = (values[1] * units.degree).to(units.radian)
+            hpath = (values[2] * units.degree).to(units.radian)
+            vpath = (values[3] * units.degree).to(units.radian)
+            slip = (values[4] * units.degree).to(units.radian)
+
+            return alpha, beta, hpath, vpath, slip
 
     def write_throttle_command(self, value):
         """
